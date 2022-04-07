@@ -1,0 +1,22 @@
+{
+  "name": "aad-sample-api-nodejs",
+  "version": "1.0.0",
+  "description": "Sample NodeJS api protected with Azure AD. This sample uses Passport.js for token validation.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "start-dev": "nodemon server.js"
+  },
+  "author": "SouravMishra-MSFT",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.10",
+    "passport": "^0.5.2",
+    "passport-azure-ad": "^4.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
