@@ -1,7 +1,7 @@
 {
-  "tenantID": "0891528f-b789-41ef-9d10-895a44f5f624",
-  "clientID": "71904bd8-6e7c-4223-a437-fd60a18a17cc",
-  "audience": "71904bd8-6e7c-4223-a437-fd60a18a17cc",
+  "tenantID": "{tenant-id}}",
+  "clientID": "{app-id}",
+  "audience": "{app-id}",
   "authority": "login.microsoftonline.com",
   "version": "v2.0",
   "discovery": ".well-known/openid-configuration",
