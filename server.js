@@ -2,7 +2,7 @@ const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
 const passport = require('passport');
-
+const mongoose = require('mongoose');
 
 const config = require('./config/authConfig.json');
 
@@ -19,8 +19,18 @@ dotenv.config({path: './config/main.env'});
 const app = express();
 const PORT = process.env.PORT;
 
+// ------------------------------------------------------
+// Connecting to MongoDB-Atlas using mongoose
+// ------------------------------------------------------
+const db = process.env.DB_CONNECT;
+mongoose.connect(db)
+        .then(() => console.log(`API Server connected to DB successfully....`))
+        .catch((err) => console.log(err));
+
+
+// Middlewares
 app.use(express.urlencoded({extended: false}));
-app.use(express.json({type: 'application/*+json'}));
+app.use(express.json({type: 'application/json'}));
 
 // Initialize Passport
 app.use(passport.initialize());
@@ -36,9 +46,9 @@ app.use((req, res, next) => {
     next();
 });
 
-// Routesy
+// Routes
 
-app.use('/test-api', routes);
+app.use('/api/watchlist', routes);
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

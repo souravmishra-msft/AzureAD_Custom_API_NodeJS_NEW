@@ -1,12 +1,22 @@
 {
-  "tenantID": "{tenant-id}}",
-  "clientID": "{app-id}",
-  "audience": "{app-id}",
-  "authority": "login.microsoftonline.com",
-  "version": "v2.0",
-  "discovery": ".well-known/openid-configuration",
-  "scope": ["access_as_user"],
-  "validateIssuer": true,
-  "passReqToCallback": false,
-  "loggingLevel": "info"
+    "credentials": {
+        "tenantID": "{Tenant-ID}",
+        "clientID": "{App-ID}",
+        "audience": "{App-ID}"
+    },
+    "resource": {
+        "scope": ["items.read", "items.write", "items.read.all"],
+        "roles": []
+    },
+    "metadata": {
+        "authority": "login.microsoftonline.com",
+        "discovery": ".well-known/openid-configuration",
+        "keys": "discovery/v2.0/keys",
+        "version": "v2.0"
+    },
+    "settings": {
+        "validateIssuer": true,
+        "passReqToCallback": false,
+        "loggingLevel": "info"
+    }
 }
