@@ -1,8 +1,5 @@
 const router = require('express').Router();
 const passport = require('passport');
-const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
-const jwks = require('jwks-rsa');
 const BearerStrategy = require('passport-azure-ad').BearerStrategy;
 
 const config = require('../config/authConfig.json');
@@ -19,7 +16,7 @@ const options = {
   validateIssuer: config.settings.validateIssuer,
   passReqToCallback: config.settings.passReqToCallback,
   loggingLevel: config.settings.loggingLevel,
-  scope: config.resource.scope,
+//   scope: config.resource.scope,
 };
 
 const bearerStrategy = new BearerStrategy(options, (token, done) => {
@@ -269,12 +266,20 @@ router.delete('/deleteItem/:id', passport.authenticate("oauth-bearer", {session:
         
 });
 
-/** List all the Items in the Watchlist DB */
+/** List all the Items in the Watchlist DB for users and apps */
 router.get('/listAllItems', passport.authenticate("oauth-bearer", {session: false}), async (req, res) => {
-    let scp = req.authInfo["scp"];
-    let scopeArr = scp.split(" ").filter(Boolean);
+    let scopeArr = [];
+    let rolesArr = [];
+
+    if(req.authInfo["scp"]) {
+        let scp = req.authInfo["scp"];
+        scopeArr = scp.split(" ").filter(Boolean);
+    } else if(req.authInfo["roles"]) {
+        rolesArr = req.authInfo["roles"];
+    }
+    
     try {
-        if(scopeArr.find(el => el === "items.read.all")) {
+        if((scopeArr.find(el => el === "items.read.all")) || (rolesArr.find(el => el === "items.readAll"))) {
             let item = await Item.find();
             if(!item || (item.length == 0)) {
                 res.status(200).json({
@@ -301,6 +306,7 @@ router.get('/listAllItems', passport.authenticate("oauth-bearer", {session: fals
       });
     }
 });
+
 
 module.exports = router;
 
