@@ -1,0 +1,202 @@
+{
+	"info": {
+		"_postman_id": "9c6e2d4c-1677-447b-8624-dca0cc026f7f",
+		"name": "AAD_Sample_Node_API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add Item",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer ",
+						"description": "Fetch a token using the auth-code grant flow",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Moon Knight\",\r\n    \"genre\": \"Adventure\",\r\n    \"type\": \"Series\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/watchlist/additem",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"watchlist",
+						"additem"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Items",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer ",
+						"type": "text",
+						"description": "Fetch a token using the auth-code grant flow"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/watchlist/listItems",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"watchlist",
+						"listItems"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Item",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer ",
+						"type": "text",
+						"description": "Fetch a token using the auth-code grant flow"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"state\": \"Completed\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/watchlist/updateItem/62839cc44d57d672131d6807",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"watchlist",
+						"updateItem",
+						"62839cc44d57d672131d6807"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete  Item",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer ",
+						"type": "text",
+						"description": "Fetch a token using the auth-code grant flow"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/watchlist/deleteItem/62839cc44d57d672131d6807",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"watchlist",
+						"deleteItem",
+						"62839cc44d57d672131d6807"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List All Items",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer ",
+						"type": "text",
+						"description": "Fetch a token using the client-credentials flow"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/watchlist/listallitems",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"watchlist",
+						"listallitems"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

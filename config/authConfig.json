@@ -1,8 +1,8 @@
 {
     "credentials": {
-        "tenantID": "0891528f-b789-41ef-9d10-895a44f5f624",
-        "clientID": "71904bd8-6e7c-4223-a437-fd60a18a17cc",
-        "audience": "71904bd8-6e7c-4223-a437-fd60a18a17cc"
+        "tenantID": "<tenant-id>",
+        "clientID": "<application-id>",
+        "audience": "<application-id>"
     },
     "resource": {
         "scope": ["items.read", "items.write", "items.read.all"]

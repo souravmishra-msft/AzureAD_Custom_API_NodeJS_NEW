@@ -9,14 +9,14 @@ const Item = require('../models/Items');
 // Preparing for BearerStrategy
 // -------------------------------------------------------
 const options = {
-  identityMetadata: `https://${config.metadata.authority}/${config.credentials.tenantID}/${config.metadata.version}/${config.metadata.discovery}`,
-  issuer: `https://${config.metadata.authority}/${config.credentials.tenantID}/${config.metadata.version}`,
-  clientID: config.credentials.clientID,
-  audience: config.credentials.audience,
-  validateIssuer: config.settings.validateIssuer,
-  passReqToCallback: config.settings.passReqToCallback,
-  loggingLevel: config.settings.loggingLevel,
-//   scope: config.resource.scope,
+    identityMetadata: `https://${config.metadata.authority}/${config.credentials.tenantID}/${config.metadata.version}/${config.metadata.discovery}`,
+    issuer: `https://${config.metadata.authority}/${config.credentials.tenantID}/${config.metadata.version}`,
+    clientID: config.credentials.clientID,
+    audience: config.credentials.audience,
+    validateIssuer: config.settings.validateIssuer,
+    passReqToCallback: config.settings.passReqToCallback,
+    loggingLevel: config.settings.loggingLevel,
+    //   scope: config.resource.scope,
 };
 
 const bearerStrategy = new BearerStrategy(options, (token, done) => {
@@ -27,13 +27,13 @@ const bearerStrategy = new BearerStrategy(options, (token, done) => {
 passport.use(bearerStrategy);
 
 
-router.get('/test', passport.authenticate("oauth-bearer", {session: false}), (req, res) => {
+router.get('/test', passport.authenticate("oauth-bearer", { session: false }), (req, res) => {
     const request = req.headers.authorization;
     // console.log(token[1]);
     let scp = req.authInfo["scp"];
     let scopeArr = scp.split(" ").filter(Boolean);
     try {
-        if(scopeArr.find(el => el === "items.read")) {
+        if (scopeArr.find(el => el === "items.read")) {
             res.status(200).json({
                 status: "Success",
                 message: "Test Successful"
@@ -43,22 +43,22 @@ router.get('/test', passport.authenticate("oauth-bearer", {session: false}), (re
                 status: 401,
                 message: "Unauthorized",
             });
-        }   
+        }
     } catch (error) {
         res.status(500).json({
-        status: 500,
-        message: error.message,
-      });
+            status: 500,
+            message: error.message,
+        });
     }
 });
 
 
 /** Create a new Watchlist item and add it to DB. */
-router.post('/addItem', passport.authenticate("oauth-bearer", {session: false}), async (req, res) => {
+router.post('/addItem', passport.authenticate("oauth-bearer", { session: false }), async (req, res) => {
     let scp = req.authInfo["scp"];
     let scopeArr = scp.split(" ").filter(Boolean);
     try {
-        if(scopeArr.find(el => el === "items.write")) {
+        if (scopeArr.find(el => el === "items.readwrite")) {
             const item = new Item({
                 title: req.body.title,
                 genre: req.body.genre,
@@ -83,23 +83,23 @@ router.post('/addItem', passport.authenticate("oauth-bearer", {session: false}),
                 status: 401,
                 message: "Unauthorized",
             });
-        }     
+        }
     } catch (error) {
         res.status(500).json({
-        status: 500,
-        message: error.message,
-      });
+            status: 500,
+            message: error.message,
+        });
     }
 });
 
 /** Fetch list of items created by a specific user */
-router.get('/listItems', passport.authenticate("oauth-bearer", {session: false}), async (req, res) => {
+router.get('/listItems', passport.authenticate("oauth-bearer", { session: false }), async (req, res) => {
     let scp = req.authInfo["scp"];
     let scopeArr = scp.split(" ").filter(Boolean);
     try {
-        if(scopeArr.find(el => el === "items.read")) {
-            let item = await Item.find({userID: req.authInfo.oid});
-            if(!item || (item.length == 0)) {
+        if (scopeArr.find(el => el === "items.read")) {
+            let item = await Item.find({ userID: req.authInfo.oid });
+            if (!item || (item.length == 0)) {
                 res.status(200).json({
                     status: "failure",
                     message: "No items found for this user."
@@ -110,51 +110,52 @@ router.get('/listItems', passport.authenticate("oauth-bearer", {session: false})
                     length: item.length,
                     items: item
                 });
-            }            
-        }  else {
+            }
+        } else {
             res.status(401).json({
                 status: 401,
                 message: "Unauthorized",
             });
-        } 
+        }
     } catch (error) {
         res.status(500).json({
-        status: 500,
-        message: error.message,
-      });
+            status: 500,
+            message: error.message,
+        });
     }
 });
 
 
 /** Update item created by a specific user */
-router.patch('/updateItem/:id', passport.authenticate("oauth-bearer", {session: false}), async (req, res) => {
+router.patch('/updateItem/:id', passport.authenticate("oauth-bearer", { session: false }), async (req, res) => {
     let scp = req.authInfo["scp"];
     let scopeArr = scp.split(" ").filter(Boolean);
     try {
-        if(scopeArr.find(el => el === "items.write")) {
-            const item = await Item.findOne({_id: req.params.id});
+        if (scopeArr.find(el => el === "items.readwrite")) {
+            const item = await Item.findOne({ _id: req.params.id });
             // console.log(item);
-            if(!item || (item.length == 0)) {
+            if (!item || (item.length == 0)) {
                 // item not found 
                 res.status(200).json({
                     status: "failure",
                     message: "No items found for this user."
-                });   
+                });
             } else {
                 // console.log(req.authInfo.oid);
                 // console.log(item["userID"]);
                 // if item found then check if the user can update the item or not
-                if(req.authInfo.oid != item["userID"]) {
+                if (req.authInfo.oid != item["userID"]) {
                     res.status(200).json({
                         status: "failure",
                         message: "cannot edit this item."
-                    }); 
+                    });
                 } else {
                     //If user can update the item
                     try {
                         const updatedItem = await Item.findByIdAndUpdate(
-                            req.params.id, 
-                            { $set: {
+                            req.params.id,
+                            {
+                                $set: {
                                     title: req.body.title,
                                     genre: req.body.genre,
                                     type: req.body.type,
@@ -166,8 +167,8 @@ router.patch('/updateItem/:id', passport.authenticate("oauth-bearer", {session: 
                             status: "success",
                             message: "Item updated successfully."
                         });
-                    } catch(err){
-                        res.status(400).send({status: "failure", error: err.message});
+                    } catch (err) {
+                        res.status(400).send({ status: "failure", error: err.message });
                     }
                 }
             }
@@ -176,31 +177,31 @@ router.patch('/updateItem/:id', passport.authenticate("oauth-bearer", {session: 
                 status: 401,
                 message: "Unauthorized",
             });
-        } 
+        }
     } catch (error) {
         res.status(500).json({
-        status: 500,
-        message: error.message,
-      });
+            status: 500,
+            message: error.message,
+        });
     }
 });
 
 /** Delete item created by a specific user */
-router.delete('/deleteItem/:id', passport.authenticate("oauth-bearer", {session: false}), async (req, res) => {
+router.delete('/deleteItem/:id', passport.authenticate("oauth-bearer", { session: false }), async (req, res) => {
     let scp = req.authInfo["scp"];
     let scopeArr = scp.split(" ").filter(Boolean);
     try {
-        if(scopeArr.find(el => el === "items.read")) {
-            const item = await Item.findOne({_id: req.params.id});
-            if(!item || (item.length == 0)) {
+        if (scopeArr.find(el => el === "items.read")) {
+            const item = await Item.findOne({ _id: req.params.id });
+            if (!item || (item.length == 0)) {
                 // item not found 
                 res.status(200).json({
                     status: "failure",
                     message: "no items found for this user."
-                });   
+                });
             } else {
                 // if item found then check if the user can delete the item or not
-                if(req.authInfo.oid != item["userID"]) {
+                if (req.authInfo.oid != item["userID"]) {
                     res.status(200).json({
                         status: "failure",
                         message: "user cannot delete this item."
@@ -209,9 +210,9 @@ router.delete('/deleteItem/:id', passport.authenticate("oauth-bearer", {session:
                     //If user can delete the item   
                     try {
                         const deletedItem = await Item.findByIdAndDelete(req.params.id);
-                        res.status(200).json({status: "success", message: `item deleted successfully.`});
-                    } catch(err){
-                        res.status(400).send({status: "failure", error: err.message});
+                        res.status(200).json({ status: "success", message: `item deleted successfully.` });
+                    } catch (err) {
+                        res.status(400).send({ status: "failure", error: err.message });
                     }
                 }
             }
@@ -220,32 +221,32 @@ router.delete('/deleteItem/:id', passport.authenticate("oauth-bearer", {session:
                 status: 401,
                 message: "Unauthorized",
             });
-        } 
+        }
     } catch (error) {
         res.status(500).json({
-        status: 500,
-        message: error.message,
-      });
+            status: 500,
+            message: error.message,
+        });
     }
-        
+
 });
 
 /** List all the Items in the Watchlist DB for users and apps */
-router.get('/listAllItems', passport.authenticate("oauth-bearer", {session: false}), async (req, res) => {
+router.get('/listAllItems', passport.authenticate("oauth-bearer", { session: false }), async (req, res) => {
     let scopeArr = [];
     let rolesArr = [];
 
-    if(req.authInfo["scp"]) {
+    if (req.authInfo["scp"]) {
         let scp = req.authInfo["scp"];
         scopeArr = scp.split(" ").filter(Boolean);
-    } else if(req.authInfo["roles"]) {
+    } else if (req.authInfo["roles"]) {
         rolesArr = req.authInfo["roles"];
     }
-    
+
     try {
-        if((scopeArr.find(el => el === "items.read.all")) || (rolesArr.find(el => el === "items.readAll"))) {
+        if ((scopeArr.find(el => el === "items.read.all")) || (rolesArr.find(el => el === "items.readAll"))) {
             let item = await Item.find();
-            if(!item || (item.length == 0)) {
+            if (!item || (item.length == 0)) {
                 res.status(200).json({
                     status: "failure",
                     message: "No items found for this user."
@@ -256,7 +257,7 @@ router.get('/listAllItems', passport.authenticate("oauth-bearer", {session: fals
                     length: item.length,
                     items: item
                 });
-            }     
+            }
         } else {
             res.status(401).json({
                 status: 401,
@@ -265,9 +266,9 @@ router.get('/listAllItems', passport.authenticate("oauth-bearer", {session: fals
         }
     } catch (error) {
         res.status(500).json({
-        status: 500,
-        message: error.message,
-      });
+            status: 500,
+            message: error.message,
+        });
     }
 });
 
