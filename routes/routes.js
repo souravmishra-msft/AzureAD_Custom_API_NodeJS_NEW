@@ -26,43 +26,6 @@ const bearerStrategy = new BearerStrategy(options, (token, done) => {
 // console.log(bearerStrategy);
 passport.use(bearerStrategy);
 
-// --------------------------------------------------------
-// Preparing for JWTStrategy
-// --------------------------------------------------------
-// const jwtOptions = {
-//     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-//     // Dynamically provide a signing key based on the kid in the header and 
-//     // signing keys provided by the JWKS endpoint.
-//     secretOrKeyProvider: jwks.passportJwtSecret({
-//         jwksUri: `https://${config.metadata.authority}/${config.credentials.tenantID}/${config.metadata.keys}`,
-//     }),
-//     algorithm: ['RS256'],
-//     audience: config.credentials.audience,
-//     issuer: `https://${config.metadata.authority}/${config.credentials.tenantID}/${config.metadata.version}`
-// };
-
-// const verify = (jwt_payload, done) => {
-//     console.log(`Signature is valid for the JWT. Checking other things...`);
-//     // console.log(jwt_payload);
-
-//     if(config.resource.roles == jwt_payload.roles) {
-//         console.log(jwt_payload);
-//         return done(null, jwt_payload);
-//     }
-//     return done(null, false);
-// };
-
-// passport.use(new JwtStrategy(jwtOptions, verify));
-
-// router.get("/test1", passport.authorize("jwt", {session: false}), (req, res) => {
-//     console.log(res);
-//      res.status(200).json({
-//         status: "Success",
-//         message: "Test-1 Successful"
-//     });
-// });
-
-
 
 router.get('/test', passport.authenticate("oauth-bearer", {session: false}), (req, res) => {
     const request = req.headers.authorization;
@@ -88,6 +51,7 @@ router.get('/test', passport.authenticate("oauth-bearer", {session: false}), (re
       });
     }
 });
+
 
 /** Create a new Watchlist item and add it to DB. */
 router.post('/addItem', passport.authenticate("oauth-bearer", {session: false}), async (req, res) => {
@@ -129,7 +93,7 @@ router.post('/addItem', passport.authenticate("oauth-bearer", {session: false}),
 });
 
 /** Fetch list of items created by a specific user */
-router.get('/listitems', passport.authenticate("oauth-bearer", {session: false}), async (req, res) => {
+router.get('/listItems', passport.authenticate("oauth-bearer", {session: false}), async (req, res) => {
     let scp = req.authInfo["scp"];
     let scopeArr = scp.split(" ").filter(Boolean);
     try {

@@ -4,8 +4,6 @@ const dotenv = require('dotenv');
 const passport = require('passport');
 const mongoose = require('mongoose');
 
-const config = require('./config/authConfig.json');
-
 // Include routes
 const routes = require('./routes/routes');
 
